@@ -15,7 +15,7 @@ class SolveResponse(BaseModel):
     answer: str
 
 def parse_response(raw: str) -> SolveResponse:
-    """Parses Gemini response into steps and answer"""
+    """Parses response into steps and answer"""
     
     lines = raw.strip().split('\n')
     steps = []

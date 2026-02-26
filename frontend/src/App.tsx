@@ -65,14 +65,13 @@ function App() {
       } else {
         const imageData = canvasRef.current?.toDataURL({
           format: 'png',
-          multiplier: 0
+          multiplier: 1  // ✅ fixed: was 0 which exported blank image
         })
         if (!imageData) {
           setIsLoading(false)
           return
         }
-        const base64 = imageData.replace('data:image/png;base64,', '')
-        result = await solveImage(base64)
+        result = await solveImage(imageData) // ✅ send full data URI, backend strips prefix
       }
 
       if (result) {
@@ -89,51 +88,51 @@ function App() {
     }
   }
 
-return (
-  <div className="flex flex-col h-screen bg-gray-50">
+  return (
+    <div className="flex flex-col h-screen bg-gray-50">
 
-    {/* Header */}
-    <div className="flex items-center px-6 py-3 bg-white border-b border-gray-200 shadow-sm">
-      <span className="text-2xl mr-2">🧮</span>
-      <span className="text-xl font-bold text-gray-800">CalcuraAI</span>
-      <span className="ml-2 text-sm text-gray-400">Math Solver</span>
-    </div>
-
-    {/* Toolbar */}
-    <Toolbar
-      mode={mode}
-      isLoading={isLoading}
-      onDraw={() => setMode('draw')}
-      onType={() => setMode('type')}
-      onUndo={handleUndo}
-      onDelete={handleDelete}
-      onSolve={handleSolve}
-    />
-
-    {/* Split Screen */}
-    <div className="flex flex-1 overflow-hidden">
-
-      {/* Left — Input Canvas */}
-      <div className="w-1/2 border-r-2 border-gray-200">
-        <InputCanvas
-          mode={mode}
-          text={text}
-          onTextChange={setText}
-          canvasRef={canvasRef}
-        />
+      {/* Header */}
+      <div className="flex items-center px-6 py-3 bg-white border-b border-gray-200 shadow-sm">
+        <span className="text-2xl mr-2">🧮</span>
+        <span className="text-xl font-bold text-gray-800">CalcuraAI</span>
+        <span className="ml-2 text-sm text-gray-400">Math Solver</span>
       </div>
 
-      {/* Right — Output Canvas */}
-      <div className="w-1/2">
-        <OutputCanvas
-          isLoading={isLoading}
-          steps={steps}
-          answer={answer}
-        />
-      </div>
+      {/* Toolbar */}
+      <Toolbar
+        mode={mode}
+        isLoading={isLoading}
+        onDraw={() => setMode('draw')}
+        onType={() => setMode('type')}
+        onUndo={handleUndo}
+        onDelete={handleDelete}
+        onSolve={handleSolve}
+      />
 
+      {/* Split Screen */}
+      <div className="flex flex-1 overflow-hidden">
+
+        {/* Left — Input Canvas */}
+        <div className="w-1/2 border-r-2 border-gray-200">
+          <InputCanvas
+            mode={mode}
+            text={text}
+            onTextChange={setText}
+            canvasRef={canvasRef}
+          />
+        </div>
+
+        {/* Right — Output Canvas */}
+        <div className="w-1/2">
+          <OutputCanvas
+            isLoading={isLoading}
+            steps={steps}
+            answer={answer}
+          />
+        </div>
+
+      </div>
     </div>
-  </div>
   )
 }
 
