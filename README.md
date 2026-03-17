@@ -1,6 +1,6 @@
 # ai-Calcura-Adithya-ISE5-2025
 AI Handwritten Problem or Expression Calculator - Final Year Project 2021-2025 ISE
-<<<<<<< HEAD
+
 Gemini API ✅
 
 Supports handwritten image analysis
@@ -15,7 +15,7 @@ Groq ✅ (current)
 
 Free, no credit card
 Supports images with llama-4-scout model
-=======
+
 
 
 Calcura Math Solver is an AI-powered tool that can solve both text-based and handwritten math problems. The solution process is detailed step by step, making it useful for learning and verification purposes.
