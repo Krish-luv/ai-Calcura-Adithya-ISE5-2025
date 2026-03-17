@@ -1,4 +1,4 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 from services.groq_service import solve_math_text, solve_math_image
 
@@ -30,14 +30,28 @@ def parse_response(raw: str) -> SolveResponse:
             answer = line.split(':', 1)[-1].strip()
 
     return SolveResponse(steps=steps, answer=answer)
-
 @router.post("/solve")
 async def solve(request: SolveRequest):
-    """Main solve endpoint"""
-    
-    if request.type == "text":
-        raw = solve_math_text(request.content)
-    else:
-        raw = solve_math_image(request.content)
+    try:
+        if request.type == "text":
+            if not request.content.strip():
+                raise HTTPException(status_code=400, detail="Problem text is empty")
+            raw = solve_math_text(request.content)
+        else:
+            if not request.content:
+                raise HTTPException(status_code=400, detail="Image data is empty")
+            raw = solve_math_image(request.content)
 
-    return parse_response(raw)
+        if not raw:
+            raise HTTPException(status_code=500, detail="AI returned empty response")
+
+        return parse_response(raw)
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        print(f"Internal error: {str(e)}")
+        raise HTTPException(
+            status_code=500,
+            detail="Something went wrong. Please try again."
+        )
